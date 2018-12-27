@@ -34,6 +34,10 @@ instrument_array = [
     'cello'
 ]
 
+def check_classifier(name, res):
+    print(name)
+    print(res)
+
 def generate_info_for_audio(video_root, wav_root, classifier, output='./test_info.json'):
     video_name = []
     audio_name = []
@@ -51,6 +55,7 @@ def generate_info_for_audio(video_root, wav_root, classifier, output='./test_inf
     result_info = []
     for v in video_name:
         instrument1, instrument2 = classifier(os.path.join(video_root, v + 'mp4'))
+        check_classifier(v, (instrument1, instrument2))
         wav_path = os.path.join(wav_root, v + 'wav')
         assert os.path.exists(wav_path)
         result_info.append({

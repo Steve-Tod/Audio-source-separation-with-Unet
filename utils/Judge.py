@@ -160,8 +160,8 @@ def getInstrumentPos(videoSrc):
     finalProbs = finalProbs / np.sum(finalProbs)
     index = finalProbs.argsort()[-2:][::-1]
     print(finalProbs[index[1]])
-    #redo
-    if finalProbs[index[1]]< 0.03:
+    #re do
+    if finalProbs[index[1]]< 0.02:
         finalProbsLeft1 = np.zeros([8])
         finalProbsRight1 = np.zeros([8])
         finalProbsLeft2 = np.zeros([8])
@@ -171,8 +171,12 @@ def getInstrumentPos(videoSrc):
         result = {}
         #kill = 0
         for item in pic_set:
-            newimg = item[0,:,:]
-            new_img = np.sum(newimg,axis = 1)
+            new_img = np.sum(item,axis = 2)
+            new_img = new_img.astype(int)
+            _,w = new_img.shape
+            for i in range(w-1):
+                new_img[:,i] = abs(new_img[:,i+1] - new_img[:,i])
+            new_img = np.sum(new_img[:,:],axis = 0)
             max_gap = (0,0)
             for i in range(10,len(new_img)-10):
                 if abs(int(new_img[i+1])-int(new_img[i]))>max_gap[0]:
@@ -194,7 +198,8 @@ def getInstrumentPos(videoSrc):
                 itemRight1 = itemRight[:,0:h_right,:]
                 itemRight2 = itemRight[:,w_right - h_right:-1,:]  
             
-            #cv2.imwrite('/home/yxm/test/pic/' + name + '/*' + str(kill)+'.jpg',item)
+            #cv2.imwrite('/home/yxm/test/pic/' + name + '/*' + str(kill)+'.jpg',itemLeft)
+            #cv2.imwrite('/home/yxm/test/pic/' + name + '/**' + str(kill)+'.jpg',itemRight)
             #kill+=1
             originProbsLeft1, _ = get_CAM(itemLeft1)
             originProbsRight1, _ = get_CAM(itemRight1)
