@@ -3,6 +3,9 @@ import json
 from dataHelper import separation
 import numpy as np
 import wave
+import sys
+
+res_str_list = []
 
 def read_signal(wavename):
     f=wave.open(wavename)
@@ -69,6 +72,8 @@ def Evaluate(jsonpath,ResultAudioPath,gtAudioPath):
         # print acc
         print(file_prefix)
         print(rvalue[0])
+        res_str_list.append(file_prefix)
+        res_str_list.append(str(rvalue[0]))
         sdr_list.extend(rvalue[0])
 
 
@@ -80,3 +85,7 @@ if __name__ == '__main__':
     acc,sdr=Evaluate(jsonpath,ResultAudioPath,gtAudioPath)
     print('accuracy:',float(sum(acc))/len(acc))
     print('mean sdr:',sum(sdr)/len(sdr))
+    res_str_list.append('accuracy:%.5f'%(float(sum(acc))/len(acc)))
+    res_str_list.append('mean sdr:%.5f'%(sum(sdr)/len(sdr)))
+    with open('./result/result_acc/'+sys.argv[1]+'.txt', 'w') as f:
+        f.write('\n'.join(res_str_list))
