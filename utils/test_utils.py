@@ -85,28 +85,37 @@ def default_test_loader(wav_path):
 
 class TestSet(data.Dataset):
     def __init__(self, file_list='./test_info.json',
-                 loader = default_test_loader):
+                 loader = default_test_loader, db=True):
         with open(file_list, 'r') as f:
             self.file_list = json.load(f)
         self.loader = loader
+        self.db = db
     
     def __getitem__(self, index):
         info = self.file_list[index]
         wav_path = os.path.join(info['mixed_path'])
         stft, length = self.loader(wav_path)
         instrument = (instrument_dict[info['instrument1']], instrument_dict[info['instrument2']])
-        res = {
-            'stft': torch.from_numpy(librosa.amplitude_to_db(np.abs(stft))),
-            'stft_angle': np.angle(stft),
-            'instrument':instrument,
-            'length': length
-        }
+        if self.db:
+            res = {
+                'stft': torch.from_numpy(librosa.amplitude_to_db(np.abs(stft))),
+                'stft_angle': np.angle(stft),
+                'instrument':instrument,
+                'length': length
+            }
+        else:
+            res = {
+                'stft': torch.from_numpy(np.abs(stft)),
+                'stft_angle': np.angle(stft),
+                'instrument':instrument,
+                'length': length
+            }
         return res
     
     def __len__(self):
         return len(self.file_list)
     
-def source_separation_once(model, sample):
+def source_separation_once(model, sample, db):
     with torch.no_grad():
         input_stft = sample["stft"].float()
         mask_list = torch.zeros(1, input_stft.shape[1], 8, 512, 512)
@@ -118,12 +127,21 @@ def source_separation_once(model, sample):
         output2 = torch.squeeze(mask2 * input_stft)
 
         angle = torch.squeeze(sample["stft_angle"])
-        out_stft1 = Polar2Complex(
-            librosa.db_to_amplitude(output1.cpu().numpy()),
-            angle.numpy())
-        out_stft2 = Polar2Complex(
-            librosa.db_to_amplitude(output2.cpu().numpy()),
-            angle.numpy())
+        if db:
+            out_stft1 = Polar2Complex(
+                librosa.db_to_amplitude(output1.cpu().numpy()),
+                angle.numpy())
+            out_stft2 = Polar2Complex(
+                librosa.db_to_amplitude(output2.cpu().numpy()),
+                angle.numpy())
+        else:
+            out_stft1 = Polar2Complex(
+                output1.cpu().numpy(),
+                angle.numpy())
+            out_stft2 = Polar2Complex(
+                output2.cpu().numpy(),
+                angle.numpy())
+
         res1 = np.zeros(angle.shape[0] * SEG_LENGTH)
         res2 = np.zeros(angle.shape[0] * SEG_LENGTH)
         for b in range(out_stft1.shape[0]):
@@ -136,6 +154,7 @@ def source_separation_once(model, sample):
 
 def source_separation(pretrained_path, dataset, result_wav_path, result_json_path):
     assert os.path.isdir(result_wav_path)
+    db = dataset.db
     dataloader = data.DataLoader(
         dataset, batch_size=1, num_workers=6, shuffle=False)
     model = UNet(1, 8).float()
@@ -147,7 +166,7 @@ def source_separation(pretrained_path, dataset, result_wav_path, result_json_pat
     print("Start working!")
     start = time.clock()
     for i, sample in enumerate(dataloader):
-        res1, res2 = source_separation_once(model, sample)
+        res1, res2 = source_separation_once(model, sample, db)
         res_path = dataset.file_list[i]['mixed_path'].split('/')[-1]  # a.wav
         res_path = res_path[:-4]
         res1_path = res_path + '_seg1.wav'
