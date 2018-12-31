@@ -141,7 +141,7 @@ def getInstrumentPos(videoSrc):
                     pic_set.append(frame)
                     #cv2.imwrite('/home/yxm/test/pic/' + name + '/' + str(frame_cnt)+'.jpg',frame)
             else:
-                print "end to this video  " + name
+                #print "end to this video  " + name
                 video.release()
                 break      
     else:
@@ -156,10 +156,10 @@ def getInstrumentPos(videoSrc):
         finalProbs = finalProbs + originProbs
         position.append(mean_pos)
     position = np.mean(position, axis=0)
-    print finalProbs
+    # print finalProbs
     finalProbs = finalProbs / np.sum(finalProbs)
     index = finalProbs.argsort()[-2:][::-1]
-    print(finalProbs[index[1]])
+    # print(finalProbs[index[1]])
     #re do
     if finalProbs[index[1]]< 0.02:
         finalProbsLeft1 = np.zeros([8])

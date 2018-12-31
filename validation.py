@@ -24,6 +24,7 @@ instrument_dict = {
     'trumpet': 0
 }
 
+
 def evaluate(model, testloader, instrument_dict, bs, test_number=-1):
     # model eval() and cuda()
     model.eval()
@@ -66,6 +67,7 @@ def evaluate(model, testloader, instrument_dict, bs, test_number=-1):
 
     return sdr_list
 
+
 def evaluate_nodb(model, testloader, instrument_dict, bs, test_number=-1):
     # model eval() and cuda()
     model.eval()
@@ -86,12 +88,10 @@ def evaluate_nodb(model, testloader, instrument_dict, bs, test_number=-1):
             output1 = mask1 * input_stft
             output2 = mask2 * input_stft
 
-            out_stft1 = Polar2Complex(
-                output1.cpu().numpy(),
-                sample["stft_angle"][2].numpy())
-            out_stft2 = Polar2Complex(
-                output2.cpu().numpy(),
-                sample["stft_angle"][2].numpy())
+            out_stft1 = Polar2Complex(output1.cpu().numpy(),
+                                      sample["stft_angle"][2].numpy())
+            out_stft2 = Polar2Complex(output2.cpu().numpy(),
+                                      sample["stft_angle"][2].numpy())
             gt_stft1 = Polar2Complex(sample['stft'][0].numpy(),
                                      sample["stft_angle"][0].numpy())
             gt_stft2 = Polar2Complex(sample['stft'][1].numpy(),
@@ -107,6 +107,7 @@ def evaluate_nodb(model, testloader, instrument_dict, bs, test_number=-1):
                 break
 
     return sdr_list
+
 
 def eval_train(output1, output2, sample, sdr_list):
     out_stft1 = Polar2Complex(

@@ -1,4 +1,4 @@
 *.wav
 __pycache__/
 *.pyc
-result/
+experiment/

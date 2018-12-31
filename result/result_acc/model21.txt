@@ -1,0 +1,52 @@
+flute_2_saxophone_1
+[9.08221495 6.72940349]
+flute_3_xylophone_2
+[ 19.2830611  -13.70462418]
+acoustic_guitar_4_flute_2
+[12.45921126  8.97346505]
+cello_2_flute_2
+[14.16662666  6.00945648]
+flute_3_trumpet_5
+[11.1966463  10.18810472]
+accordion_2_cello_3
+[8.28512952 2.83773758]
+acoustic_guitar_6_flute_3
+[12.33315429 19.72482465]
+accordion_5_cello_1
+[-4.82760675  8.9412541 ]
+cello_4_flute_5
+[-0.14961937  9.75869514]
+acoustic_guitar_2_violin_1
+[12.57401507 14.47954646]
+accordion_3_acoustic_guitar_3
+[7.6011308  9.82577699]
+accordion_6_saxophone_2
+[2.63217778 2.94676998]
+accordion_4_saxophone_3
+[ 4.02107993 13.03908068]
+flute_1_xylophone_5
+[13.65173342 10.69509967]
+accordion_1_saxophone_1
+[ 4.01182299 -0.74083101]
+saxophone_1_violin_4
+[-0.15701979 11.45359026]
+flute_5_trumpet_4
+[5.16905027 1.23752116]
+flute_4_saxophone_2
+[-14.76994215   2.34227995]
+acoustic_guitar_1_violin_2
+[10.00754465  4.09264293]
+saxophone_2_violin_2
+[-1.59110568  1.89355908]
+accordion_2_acoustic_guitar_2
+[6.74583233 3.96578975]
+flute_4_trumpet_1
+[-3.55710238 12.45039257]
+acoustic_guitar_5_violin_3
+[10.58423132  0.46257186]
+saxophone_3_violin_3
+[14.4457195   2.96232149]
+flute_3_saxophone_3
+[17.52201645 14.17003779]
+accuracy:1.00000
+mean sdr:6.70909
